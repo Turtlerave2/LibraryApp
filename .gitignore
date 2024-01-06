@@ -2,3 +2,5 @@
 .idea/vcs.xml
 *.xml
 .idea/LibraryApp.iml
+.idea/LibraryApp.iml
+*.iml
