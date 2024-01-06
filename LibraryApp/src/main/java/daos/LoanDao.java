@@ -121,6 +121,7 @@ public class LoanDao extends Dao implements LoanDaoInterface{
         }
 
         return loans;
+
     }
 
     /**
