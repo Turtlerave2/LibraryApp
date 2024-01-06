@@ -5,8 +5,8 @@ import java.util.Scanner;
 public  class BookDaoInterface {
 
     // database information
-static final String DB_URL = "jdbc:mysql://"
-static final String USER = "";
+static final String DB_URL  = "jdbc:mysql://localhost:3306/";
+static final String USER = "root";
 static final String PASS = "";
 
 public static void main(String[] args) {
