@@ -20,6 +20,35 @@ public class UserDaoTest {
 
     @Test
     public void testFindAllUsers() {
+    }
+
+    @Test
+    public void testFindUserByUsernamePassword() {
+    }
+
+    @Test
+    public void testFindUserByUsernamePassword() {
+    }
+
+    @Test
+    public void testFindUserById() {
+    }
+
+    @Test
+    public void testAddUser() {
+    }
+
+    @Test
+    public void testChangePassword() {
+    }
+    
+    @Test
+    public void testFindAllUsersContainingUsername() {
+
+    }
+
+    @Test
+    public void testFindAllUsers() {
         List<User> users = userDao.findAllUsers();
         assertNotNull(users);
         assertTrue(users.size() > 0);
