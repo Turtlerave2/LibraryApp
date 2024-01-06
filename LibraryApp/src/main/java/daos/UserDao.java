@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDao extends Dao {
+public class UserDao extends Dao implements UserDaoInterface{
     public UserDao(String dbName){
         super(dbName);
     }
