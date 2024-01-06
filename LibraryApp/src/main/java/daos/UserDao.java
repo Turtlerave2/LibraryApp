@@ -8,12 +8,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * This class represents a Data Access Object (DAO) for managing User data in the database.
+ * Author: rob
+ */
 
 public class UserDao extends Dao implements UserDaoInterface{
+    /**
+     * Constructs a UserDao object with a specified database name.
+     *
+     * @param dbName The name of the database
+     */
     public UserDao(String dbName){
         super(dbName);
     }
 
+
+    /**
+     * Retrieves all users from the 'members' table.
+     *
+     * @return A list of User objects representing all users in the database
+     */
     public List<User> findAllUsers() {
         Connection con = null;
         PreparedStatement ps = null;
@@ -49,6 +64,13 @@ public class UserDao extends Dao implements UserDaoInterface{
         return users;     // may be empty
     }
 
+    /**
+     * Retrieves a user by username and password.
+     *
+     * @param uname The username of the user
+     * @param pword The password of the user
+     * @return A User object representing the user if found, otherwise null
+     */
     public User findUserByUsernamePassword(String uname, String pword) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -85,6 +107,13 @@ public class UserDao extends Dao implements UserDaoInterface{
         return u;     // u may be null
     }
 
+
+    /**
+     * Retrieves a user by their ID.
+     *
+     * @param id The ID of the user
+     * @return A User object representing the user if found, otherwise null
+     */
     public User findUserById(int id) {
         // Find a user by their ID
         Connection con = null;
@@ -121,6 +150,15 @@ public class UserDao extends Dao implements UserDaoInterface{
         return u;
     }
 
+    /**
+     * Adds a new user to the 'members' table.
+     *
+     * @param uname The username of the new user
+     * @param pword The password of the new user
+     * @param fName The first name of the new user
+     * @param lName The last name of the new user
+     * @return The ID of the newly added user, or -1 if the addition fails
+     */
     public int addUser(String uname, String pword, String fName, String lName) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -163,6 +201,15 @@ public class UserDao extends Dao implements UserDaoInterface{
         return newId;
     }
 
+    /**
+     * Changes the password of a user.
+     *
+     * @param username The username of the user
+     * @param oldPass  The old password of the user
+     * @param newPass  The new password to set
+     * @return The number of affected rows (1 if successful, 0 if unsuccessful)
+     */
+
     public int changePassword(String username, String oldPass, String newPass) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -194,6 +241,13 @@ public class UserDao extends Dao implements UserDaoInterface{
         return rowsAffected;
     }
 
+
+    /**
+     * Finds all users whose username contains a specific string.
+     *
+     * @param username The partial username to search for
+     * @return A list of User objects matching the search criteria
+     */
     public List<User> findAllUsersContainingUsername(String username) {
         // Find all users whose username contains a certain string
         Connection con = null;
