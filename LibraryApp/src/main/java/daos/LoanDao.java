@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class LoanDao extends Dao{
+public class LoanDao extends Dao implements LoanDaoInterface{
     private int memberID;
     private int bookid;
 
@@ -34,8 +34,6 @@ public class LoanDao extends Dao{
      *
      * @param memberID the id of the member to get the active loans for them
      * @return a list of the active loans for the member
-     * @throws DaoException if error occurs while getting the active loans or connecting to
-     * the database.
      */
     public List<Loans> viewActiveLoans(int memberID) throws DaoException {
         Connection con = null;
@@ -91,7 +89,6 @@ public class LoanDao extends Dao{
      *
      * @param memberId the id of the member
      * @return a list of loans linked to the member
-     * @throws DaoException if error occurs while getting the loans or connecting to database.
      */
     public List<Loans> getLoansForMember(int memberId) throws DaoException {
         Connection con = null;
@@ -131,9 +128,8 @@ public class LoanDao extends Dao{
      *
      * @param memberID the id of the member to search for, the overdue fees
      * @return the total of overdue fees for the member
-     * @throws DaoException if there was an error retrieving overdue fees from the database
      */
-    public double getCurrentOverdueFees(int memberID) throws DaoException{
+    public double getCurrentOverdueFees(int memberID) {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -213,7 +209,7 @@ public class LoanDao extends Dao{
             return false;
         }
     }
-    
+
      //leo
     /**
      * checks and processes the payment for a late fee for a member
