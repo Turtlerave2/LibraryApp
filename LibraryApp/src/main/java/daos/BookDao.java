@@ -75,6 +75,7 @@ public class BookDao extends Dao {
             }
         }
         return books;
+    }
 
         public List<Book> searchBookTitle(String title) throws DaoException {
             Connection con = null;

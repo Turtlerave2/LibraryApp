@@ -96,3 +96,7 @@ public class Book {
                 ", publicationYear=" + publicationYear +
                 ", genreID=" + genreID +
                 ", totalCopies=" + totalCopies +
+                ", description='" + description + '\'' +
+                '}';
+    }
+}
