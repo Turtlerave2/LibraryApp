@@ -75,5 +75,32 @@ public class BookDao extends Dao {
             }
         }
         return books;
+
+        public List<Book> searchBookTitle(String title) throws DaoException {
+            Connection con = null;
+            PreparedStatement ps = null;
+
+            ResultSet rs = null;
+
+            List<Book> books = new ArrayList<>();
+
+            try {
+                con = getConnection();
+
+                String query = "SELECT * FROM book WHERE Title LIKE ?";
+                ps = con.prepareStatement(query);
+                ps.setString(1, "%" + title + "%");
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    int bookID = rs.getInt("Bookid");
+                    String bookTitle = rs.getString("Title").trim();
+
+
+
+                }
+            }
+
+        }
     }
 }
