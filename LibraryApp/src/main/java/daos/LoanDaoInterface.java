@@ -9,5 +9,6 @@ public interface LoanDaoInterface {
 
     List<Loans> getLoansForMember(int memberId);
 
+    double getCurrentOverdueFees(int memberID);
 
 }

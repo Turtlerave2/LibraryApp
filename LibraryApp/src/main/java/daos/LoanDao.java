@@ -123,4 +123,34 @@ public class LoanDao extends Dao{
 
         return loans;
     }
-}
+
+    /**
+     *This method retrieves the total amount of fees due for a specific member
+     *
+     * @param memberID the id of the member to search for, the overdue fees
+     * @return the total of overdue fees for the member
+     * @throws DaoException if there was an error retrieving overdue fees from the database
+     */
+    public double getCurrentOverdueFees(int memberID) throws DaoException{
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        con = getConnection();
+        double overdueFees = 0.0;
+        String sql = "SELECT SUM(LateFee) AS TotalLateFees "+
+                " FROM loans WHERE MemberID = ? AND DueDate < NOW()";
+        try(PreparedStatement pss = con.prepareStatement(sql)){
+            pss.setInt(1,memberID);
+
+                try (ResultSet rss = pss.executeQuery()){
+                        if(rss.next()){
+                            overdueFees = rss.getDouble("TotalLateFees");
+                        }
+                    }
+                } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return overdueFees;
+    }
+  }
+
