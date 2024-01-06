@@ -8,6 +8,7 @@ public class Loans implements Serializable {
     private int loanID;
     private int memberID;
     private int bookID;
+    
     private Date loanDate;
     private Date dueDate;
     private Date returnDate;
