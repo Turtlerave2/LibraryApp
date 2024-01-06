@@ -1,6 +1,7 @@
 package daos;
 
 import Exceptions.DaoException;
+import business.Book;
 import daos.Dao;
 
 import java.sql.Connection;
@@ -8,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class BookDao extends Dao {
@@ -30,11 +32,11 @@ public class BookDao extends Dao {
      * @throws DaoException if an error occurs in the database operation
      */
     //leo
-    public List<book> findAllBooks() throws DaoException {
+    public List<Book> findAllBooks() throws DaoException {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        List<book> books = new ArrayList<>();
+        List<Book> books = new ArrayList<>();
 
         try {
             con = getConnection();
@@ -52,7 +54,7 @@ public class BookDao extends Dao {
                 int totalCopies = rs.getInt("TotalCopies");
                 String description = rs.getString("Description").trim();
 
-                book book = new book(bookID, title, authorID, ISBN, publicationYear, genreID, totalCopies, description);
+                Book book = new Book(bookID, title, authorID, ISBN, publicationYear, genreID, totalCopies, description);
                 books.add(book);
             }
         } catch (SQLException e) {
