@@ -122,13 +122,76 @@ public class UserDao extends Dao {
     }
 
     public int addUser(String uname, String pword, String fName, String lName) {
-        // Add a new user to the 'members' table
-        // Similar to the previous implementation
+        Connection con = null;
+        PreparedStatement ps = null;
+        int newId = -1;
+        ResultSet generatedKeys = null;
+
+        try {
+            con = this.getConnection();
+            String query = "INSERT INTO members(Username, Password, First_Name, Last_Name) VALUES (?, ?, ?, ?)";
+            ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            ps.setString(1, uname);
+            ps.setString(2, pword);
+            ps.setString(3, fName);
+            ps.setString(4, lName);
+
+            ps.executeUpdate();
+
+            generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                newId = generatedKeys.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.err.println("An error occurred during the addUser method: " + e.getMessage());
+        } finally {
+            try {
+                if (generatedKeys != null) {
+                    generatedKeys.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.err.println("An error occurred when closing down the addUser method:\n" + e.getMessage());
+            }
+        }
+        return newId;
     }
 
     public int changePassword(String username, String oldPass, String newPass) {
-        // Change password of a user
-        // Similar to the previous implementation
+        Connection con = null;
+        PreparedStatement ps = null;
+        int rowsAffected = -1;
+
+        try {
+            con = this.getConnection();
+            String query = "UPDATE members SET Password = ? WHERE Username = ? AND Password = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, newPass);
+            ps.setString(2, username);
+            ps.setString(3, oldPass);
+
+            rowsAffected = ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("An error occurred in the changePassword() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("An error occurred when shutting down the changePassword() method: " + e.getMessage());
+            }
+        }
+        return rowsAffected;
     }
 
     public List<User> findAllUsersContainingUsername(String username) {
