@@ -51,7 +51,7 @@ public class Controller extends HttpServlet {
                 case "searchbooks":
                     forwardToJsp = searchbookbytitleCommand(request, response);
                     break;
-                    case "borrowbooks";
+                case "borrowbooks":
                     forwardToJsp = borrowingbooksCommand(request, response);
                     break;
 
