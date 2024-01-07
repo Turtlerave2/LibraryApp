@@ -16,10 +16,17 @@
 
     if (loggedInUser != null) {
 %>
+<p>First Name: <%= loggedInUser.getFirstName() %></p>
+<p>Last Name: <%= loggedInUser.getLastName() %></p>
 <p>Username: <%= loggedInUser.getUsername() %></p>
 <p>Password: <%= loggedInUser.getPassword() %></p>
-<p>First Name: <%= loggedInUser.getFirstName() %></p>
-<!-- Add other user information fields as needed -->
+<p>Email: <%= loggedInUser.getEmail() %></p>
+<p>Address 1: <%= loggedInUser.getAddress1() %></p>
+<p>Address 2: <%= loggedInUser.getAddress2() %></p>
+<p>Eircode: <%= loggedInUser.getEircode() %></p>
+<p>Phone Number: <%= loggedInUser.getPhoneNumber() %></p>
+<p>Registration Date: <%= loggedInUser.getRegistrationDate() %></p>
+
 <%
 } else {
 %>
