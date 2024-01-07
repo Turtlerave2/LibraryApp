@@ -39,7 +39,8 @@
     <label for="phoneNumber">Phone Number: </label>
     <input type="text" id="phoneNumber" name="phoneNumber"><br>
 
-    <input type="submit" value="register">
+    <input type="hidden" name="action" value="register">
+    <input type="submit" value="Register">
 </form>
 </body>
 </html>
