@@ -72,7 +72,7 @@ class BookDaoTest {
             assertNotNull(returnBook);
             assertEquals(2, returnBook.getTotalCopies());
         } catch (DaoException e) {
-          fail ("Exception throw:" + e.getMessage());
+            fail ("Exception throw:" + e.getMessage());
         }
     }
 }
