@@ -318,30 +318,53 @@ public class Controller extends HttpServlet {
         if (loggedInUser != null) {
             String firstName = request.getParameter("firstName");
             String lastName = request.getParameter("lastName");
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
             String email = request.getParameter("email");
-            // ... and other parameters you want to update
+            String address1 = request.getParameter("address1");
+            String address2 = request.getParameter("address2");
+            String eircode = request.getParameter("eircode");
+            String phoneNumber = request.getParameter("phoneNumber");
 
-            // Update the user object with new details
-            loggedInUser.setFirstName(firstName);
-            loggedInUser.setLastName(lastName);
-            loggedInUser.setEmail(email);
-            // ... set other updated fields
 
-            int rowsAffected = userDao.updateUserProfile(loggedInUser);
+            if (firstName != null && !firstName.isEmpty() &&
+                    lastName != null && !lastName.isEmpty() &&
+                    username != null && !username.isEmpty() &&
+                    password != null && !password.isEmpty() &&
+                    email != null && !email.isEmpty() &&
+                    address1 != null && !address1.isEmpty() &&
+                    address2 != null && !address2.isEmpty() &&
+                    eircode != null && !eircode.isEmpty() &&
+                    phoneNumber != null && !phoneNumber.isEmpty()) {
 
-            if (rowsAffected > 0) {
-                // Profile updated successfully
-                String successMessage = "Profile has been updated successfully!";
-                session.setAttribute("successMessage", successMessage);
-                return "viewProfile.jsp";
+
+                loggedInUser.setFirstName(firstName);
+                loggedInUser.setLastName(lastName);
+                loggedInUser.setUsername(username);
+                loggedInUser.setPassword(password);
+                loggedInUser.setEmail(email);
+                loggedInUser.setAddress1(address1);
+                loggedInUser.setAddress2(address2);
+                loggedInUser.setEircode(eircode);
+                loggedInUser.setPhoneNumber(phoneNumber);
+
+                int rowsAffected = userDao.updateUserProfile(loggedInUser);
+
+                if (rowsAffected > 0) {
+                    String successMessage = "Profile has been updated successfully!";
+                    session.setAttribute("successMessage", successMessage);
+                    return "viewProfile.jsp";
+                } else {
+                    String errorMessage = "Failed to update profile. Please try again.";
+                    session.setAttribute("errorMessage", errorMessage);
+                    return "editProfile.jsp";
+                }
             } else {
-                // Profile update failed
-                String errorMessage = "Failed to update profile. Please try again.";
+                String errorMessage = "Please provide valid information for all fields.";
                 session.setAttribute("errorMessage", errorMessage);
                 return "editProfile.jsp";
             }
         } else {
-            // User not logged in, redirect to login page
             return "login.jsp";
         }
     }
