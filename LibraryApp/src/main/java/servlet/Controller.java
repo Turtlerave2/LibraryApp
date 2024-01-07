@@ -38,7 +38,7 @@ public class Controller extends HttpServlet {
         if (action != null) {
             switch (action) {
                 case"landing":
-
+                    forwardToJsp="home.jsp";
                     break;
                 case "login":
                     forwardToJsp = loginCommand(request, response);
