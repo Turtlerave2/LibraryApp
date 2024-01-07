@@ -4,38 +4,75 @@ import Exceptions.DaoException;
 import business.Book;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+class BookDaoTest {
+    private BookDaoInterface bookDao;
 
-public class BookDaoInterfaceTest {
-private BookDaoInterface bookDao;
-
-void setUp() {
-    bookDao = mock(BookDaoInterface.class);
-}
-
-@Test
-    Void testFindAllBooks(){
-    try {
-        when(bookDao.findAllBooks()).thenReturn(Arrays.asList(new Book("Book1"), new Book("Book2")));
-
-        List<Book> books = bookDao.findAllBooks();
-        assertNotNull(books);
-        assertEquals(2, books.size());
-    } catch (DaoException e) {
-        fail("Exception should not be thrown" + e.getMessage());
+    void setUp(){
+        bookDao = (BookDaoInterface) new BookDao("name");
     }
-}
 
-@Test
-    void testSearchBookByTitle() {
-    String titleToSearch = "Sample Title";
-    when(bookDao.searchBookByTitle(titleToSearch).thenReturn(Arrays.asList(new Book(titleToSearch)));
-}
+    void tearDown() {
+        bookDao = null;
+    }
+    @Test
+    void testFindAllBooks(){
+        try {
+            List<Book> books = bookDao.findAllBooks();
+            assertNotNull(books);
+            assertFalse(books.isEmpty());
 
+            for (Book book: books) {
+                assertNotNull(book.getTitle());
+                assertNotNull(book.getAuthorID());
 
+            }
+        } catch (DaoException e) {
+            fail("Exception thrown" + e.getMessage());
+        }
+    }
+
+    @Test
+    void testSearchBookTitle() {
+        String titleToSearch = "harrypotter";
+
+        try {
+            List<Book> books = bookDao.searchBookByTitle(titleToSearch);
+            assertNotNull(books);
+
+            for (Book book : books) {
+                assertTrue(book.getTitle().toLowerCase().contains(titleToSearch.toLowerCase()));
+            }
+        } catch (DaoException e) {
+            fail("Exception thrown:" + e.getMessage());
+        }
+    }
+
+    @Test
+    void testBorrowAndReturnBook() {
+        int bookIDToBorrow = 1;
+
+        try {
+            bookDao.borrowBook(bookIDToBorrow);
+
+            Book borrowedBook = bookDao.findAllBooks().stream().filter(book -> book.getBookID() == bookIDToBorrow)
+                    .findFirst().orElse(null);
+            assertNotNull(borrowedBook);
+            assertEquals(1, borrowedBook.getTotalCopies());
+
+            bookDao.returnBook(bookIDToBorrow);
+
+            Book returnBook = bookDao.findAllBooks().stream()
+                    .filter(book -> book.getBookID() == bookIDToBorrow)
+                    .findFirst()
+                    .orElse(null);
+            assertNotNull(returnBook);
+            assertEquals(2, returnBook.getTotalCopies());
+        } catch (DaoException e) {
+          fail ("Exception throw:" + e.getMessage());
+        }
+    }
 }
