@@ -51,6 +51,9 @@ public class Controller extends HttpServlet {
                 case "searchbooks":
                     forwardToJsp = searchbookbytitleCommand(request, response);
                     break;
+                    case "borrowbooks";
+                    forwardToJsp = borrowingbooksCommand(request, response);
+                    break;
 
                 default:
                     forwardToJsp = "error.jsp";
@@ -203,6 +206,23 @@ public class Controller extends HttpServlet {
         }
         return forwardToJsp;
 
+    }
+    private String borrowingbooksCommand(HttpServletRequest request, HttpServletResponse response) {
+        String forwardToJsp = "index.jsp";
+
+        HttpSession session = request.getSession(true);
+        String bookid = request.getParameter("bookId");
+        try {
+            int bookids = Integer.parseInt(bookid);
+            bookDao.borrowBook(bookids);
+            forwardToJsp = "displaysearchtitle.jsp";
+
+        } catch(DaoException e) {
+            e.getMessage();
+            forwardToJsp = "error.php";
+
+        }
+        return forwardToJsp;
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
