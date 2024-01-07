@@ -1,10 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: desti
-  Date: 07/01/2024
-  Time: 19:19
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="business.Book" %>
+<%@ page import="java.util.List" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -23,6 +18,10 @@
 <body>
 <div class="container">
     <h1 class="mt-4 mb-4">All Books</h1>
+    <%
+        List<Book> bookList = (List<Book>) session.getAttribute("bookList");
+        if (bookList != null && !bookList.isEmpty()) {
+    %>
     <table class="table table-bordered table-striped book-table">
         <thead class="thead-dark">
         <tr>
@@ -37,27 +36,31 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Iterate through the bookList attribute from the session -->
-        <c:forEach var="book" items="${sessionScope.bookList}">
-            <tr>
-                <td>${book.title}</td>
-                <td>${book.author}</td>
-                <td>${book.isbn}</td>
-                <td>${book.publicationYear}</td>
-                <td>${book.genre}</td>
-                <td>${book.totalCopies}</td>
-                <td>${book.description}</td>
-                <td>
-                    <!-- Borrow button as part of a form -->
-                    <form action="borrowBookController" method="post">
-                        <input type="hidden" name="bookId" value="${book.id}">
-                        <button type="submit" class="btn btn-primary">Borrow</button>
-                    </form>
-                </td>
-            </tr>
-        </c:forEach>
+        <% for (Book book : bookList) { %>
+        <tr>
+            <td><%= book.getTitle() %></td>
+            <td><%= book.getAuthorID() %></td>
+            <td><%= book.getISBN() %></td>
+            <td><%= book.getPublicationYear() %></td>
+            <td><%= book.getGenreID() %></td>
+            <td><%= book.getTotalCopies() %></td>
+            <td><%= book.getDescription() %></td>
+            <td>
+                <!-- Borrow button as part of a form -->
+                <form action="borrowBookController" method="get">
+                    <input type="hidden" name="bookId" value="<%= book.getBookID() %>">
+                    <button type="submit" class="btn btn-primary">Borrow</button>
+                </form>
+            </td>
+        </tr>
+        <% } %>
         </tbody>
     </table>
+    <%
+        } else {
+            System.out.println("no books found");
+        }
+    %>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

@@ -18,6 +18,6 @@
     <input type="password" id="password" name="password"><br>
     <input type="submit" value="Login">
 </form>
-<p>Don't have an account? <a href="register.jsp">Register here</a>.</p>
+<p>Don't have an account? <a href="home.jsp">Register here</a>.</p>
 </body>
 </html>

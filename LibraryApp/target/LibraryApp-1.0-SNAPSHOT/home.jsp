@@ -22,6 +22,8 @@
 <%}else{
 %>
 <div> You are logged in!</div>
+<a href="controller?action=displayallbooks">Show all books</a><br/>
+<a href="controller?action=Displayborrowbooks">Borrow a book</a>
 
 <a>Add the href to the other actions?</a>
 <%

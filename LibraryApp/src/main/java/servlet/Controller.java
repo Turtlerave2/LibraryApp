@@ -61,6 +61,9 @@ public class Controller extends HttpServlet {
                 case "borrowbooks":
                     forwardToJsp = borrowingbooksCommand(request, response);
                     break;
+                case "Displayborrowbooks":
+                    forwardToJsp = "borrowingbooks.jsp";
+                    break;
                 case "returnbooks":
                     forwardToJsp = returningbooksCommand(request, response);
                     break;
@@ -254,6 +257,8 @@ public class Controller extends HttpServlet {
         HttpSession session = request.getSession(true);
         String bookid = request.getParameter("bookId");
         try {
+            List<Book> bookdisplay = bookDao.findAllBooks();
+            session.setAttribute("bookList", bookdisplay);
             int bookids = Integer.parseInt(bookid);
             bookDao.borrowBook(bookids);
             forwardToJsp = "borrowingbooks.jsp";
