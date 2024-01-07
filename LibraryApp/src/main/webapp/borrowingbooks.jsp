@@ -47,7 +47,7 @@
             <td><%= book.getDescription() %></td>
             <td>
                 <!-- Borrow button as part of a form -->
-                <form action="borrowBookController" method="get">
+                <form action="borrowbooks" method="post">
                     <input type="hidden" name="bookId" value="<%= book.getBookID() %>">
                     <button type="submit" class="btn btn-primary">Borrow</button>
                 </form>
