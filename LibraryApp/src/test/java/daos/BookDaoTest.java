@@ -20,7 +20,9 @@ class BookDaoTest {
         void tearDown() {
             bookDao = null;
         }
-
+    /** Destiny
+     * Test the functionality of finding all books in the database.
+     */
         @Test
         void testFindAllBooks() {
             try {
@@ -37,7 +39,9 @@ class BookDaoTest {
                 fail("Exception thrown" + e.getMessage());
             }
         }
-
+    /** Destiny
+     * Test the functionality of searching books by title in the database.
+     */
         @Test
         void testSearchBookTitle() {
             String titleToSearch = "harrypotter";
@@ -53,7 +57,9 @@ class BookDaoTest {
                 fail("Exception thrown:" + e.getMessage());
             }
         }
-
+    /** Destiny
+     * Test the functionality of borrowing and returning books in the database.
+     */
         @Test
         void testBorrowAndReturnBook() {
             int bookIDToBorrow = 1;
