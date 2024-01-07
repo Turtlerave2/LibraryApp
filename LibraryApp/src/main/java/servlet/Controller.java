@@ -46,9 +46,6 @@ public class Controller extends HttpServlet {
                 case "register":
                     forwardToJsp = registerCommand(request, response);
                     break;
-                case "changePassword":
-                    forwardToJsp = changePasswordCommand(request, response);
-                    break;
                 case "displayallbooks":
                     forwardToJsp = displaybooksCommand(request, response);
                     break;
@@ -63,6 +60,14 @@ public class Controller extends HttpServlet {
                     break;
                 case "viewProfile":
                     forwardToJsp = viewProfileCommand(request, response);
+                    break;
+
+                case "updateProfile":
+                    forwardToJsp = updateUserProfileCommand(request, response);
+                    break;
+
+                case "changePassword":
+                    forwardToJsp = changePasswordCommand(request, response);
                     break;
 
                 default:
@@ -157,7 +162,7 @@ public class Controller extends HttpServlet {
                 if (newPassOne.equals(newPassTwo)) {
                     int result = userDao.changePassword(u.getUsername(), oldPass, newPassOne);
                     if (result == 1) {
-                        forwardToJsp = "loginSuccessful.jsp";
+                        forwardToJsp = "login.jsp";
                         String msg = "Password has changed.";
                         session.setAttribute("msg", msg);
                     } else {
@@ -272,6 +277,41 @@ public class Controller extends HttpServlet {
         }
         return "profile.jsp";
     }
+    private String updateUserProfileCommand(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(true);
+        User loggedInUser = (User) session.getAttribute("user");
+
+        if (loggedInUser != null) {
+            String firstName = request.getParameter("firstName");
+            String lastName = request.getParameter("lastName");
+            String email = request.getParameter("email");
+            // ... and other parameters you want to update
+
+            // Update the user object with new details
+            loggedInUser.setFirstName(firstName);
+            loggedInUser.setLastName(lastName);
+            loggedInUser.setEmail(email);
+            // ... set other updated fields
+
+            int rowsAffected = userDao.updateUserProfile(loggedInUser);
+
+            if (rowsAffected > 0) {
+                // Profile updated successfully
+                String successMessage = "Profile has been updated successfully!";
+                session.setAttribute("successMessage", successMessage);
+                return "viewProfile.jsp";
+            } else {
+                // Profile update failed
+                String errorMessage = "Failed to update profile. Please try again.";
+                session.setAttribute("errorMessage", errorMessage);
+                return "editProfile.jsp";
+            }
+        } else {
+            // User not logged in, redirect to login page
+            return "login.jsp";
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
