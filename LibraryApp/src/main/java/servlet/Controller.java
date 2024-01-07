@@ -103,7 +103,7 @@ public class Controller extends HttpServlet {
                 String error = "Incorrect credentials supplied. Please <a href=\"login.jsp\">try again.</a>";
                 session.setAttribute("errorMessage", error);
             } else {
-                forwardToJsp = "loginSuccessful.jsp";
+                forwardToJsp = "home.jsp";
                 session.setAttribute("username", username);
                 session.setAttribute("user", u);
             }
@@ -158,7 +158,7 @@ public class Controller extends HttpServlet {
                     String error = "This user could not be added. Please <a href=\"register.jsp\">try again.</a>";
                     session.setAttribute("errorMessage", error);
                 } else {
-                    forwardToJsp = "loginSuccessful.jsp";
+                    forwardToJsp = "home.jsp";
                     session.setAttribute("username", uname);
                     User u = new User(first, last, uname, pword, email, address1, address2, eircode, phoneNumber, registrationDate);
                     session.setAttribute("user", u);
