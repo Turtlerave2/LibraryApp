@@ -179,7 +179,7 @@ public class UserDao extends Dao implements UserDaoInterface{
      * @param lName The last name of the new user
      * @return The ID of the newly added user, or -1 if the addition fails
      */
-    public int addUser(String uname, String pword, String fName, String lName) {
+    public int addUser(String uname, String pword, String fName, String lName, String email, String address1, String address2, String eircode, String phoneNumber, String registrationDate) {
         Connection con = null;
         PreparedStatement ps = null;
         int newId = -1;
@@ -187,13 +187,19 @@ public class UserDao extends Dao implements UserDaoInterface{
 
         try {
             con = this.getConnection();
-            String query = "INSERT INTO members(Username, Password, First_Name, Last_Name) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO members(Username, Password, First_Name, Last_Name, Email, Address1, Address2, Eircode, Phone_Number, Registration_Date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, uname);
             ps.setString(2, pword);
             ps.setString(3, fName);
             ps.setString(4, lName);
+            ps.setString(5, email);
+            ps.setString(6, address1);
+            ps.setString(7, address2);
+            ps.setString(8, eircode);
+            ps.setString(9, phoneNumber);
+            ps.setString(10, registrationDate);
 
             ps.executeUpdate();
 
@@ -220,6 +226,7 @@ public class UserDao extends Dao implements UserDaoInterface{
         }
         return newId;
     }
+
 
     /**
      * Changes the password of a user.
@@ -269,7 +276,6 @@ public class UserDao extends Dao implements UserDaoInterface{
      * @return A list of User objects matching the search criteria
      */
     public List<User> findAllUsersContainingUsername(String username) {
-        // Find all users whose username contains a certain string
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -288,7 +294,15 @@ public class UserDao extends Dao implements UserDaoInterface{
                 String password = rs.getString("Password");
                 String lastName = rs.getString("Last_Name");
                 String firstName = rs.getString("First_Name");
-                User u = new User(userId, firstName, lastName, uname, password);
+                String email = rs.getString("Email");
+                String address1 = rs.getString("Address1");
+                String address2 = rs.getString("Address2");
+                String eircode = rs.getString("Eircode");
+                String phoneNumber = rs.getString("Phone_Number");
+                String registrationDate = rs.getString("Registration_Date");
+
+
+                User u = new User( firstName, lastName, uname, password, email, address1, address2, eircode, phoneNumber, registrationDate);
                 users.add(u);
             }
         } catch (SQLException e) {
@@ -304,6 +318,7 @@ public class UserDao extends Dao implements UserDaoInterface{
         }
         return users;
     }
+
 
     public int updateUserProfile(User updatedUser) {
         Connection con = null;

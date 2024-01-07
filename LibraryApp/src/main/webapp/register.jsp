@@ -13,11 +13,18 @@
 <h1>Registration Page</h1>
 <form action="controller" method="post">
     <input type="hidden" name="action" value="register">
-    Username: <input type="text" name="username"><br>
-    Password: <input type="password" name="password"><br>
-    First Name: <input type="text" name="fName"><br>
-    Last Name: <input type="text" name="lName"><br>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password"><br>
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword"><br>
+    <label for="fName">First Name:</label>
+    <input type="text" id="fName" name="fName"><br>
+    <label for="lName">Last Name:</label>
+    <input type="text" id="lName" name="lName"><br>
     <input type="submit" value="Register">
 </form>
+<p>Already have an account? <a href="login.jsp">Login here</a>.</p>
 </body>
 </html>

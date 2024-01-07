@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @WebServlet(name = "Controller", urlPatterns = {"/controller"})
@@ -93,9 +94,18 @@ public class Controller extends HttpServlet {
         String pword = request.getParameter("password");
         String first = request.getParameter("fName");
         String last = request.getParameter("lName");
+        String email = request.getParameter("email");
+        String address1 = request.getParameter("address1");
+        String address2 = request.getParameter("address2");
+        String eircode = request.getParameter("eircode");
+        String phoneNumber = request.getParameter("phoneNumber");
+        String registrationDate = String.valueOf(LocalDate.now());
 
-        if (uname != null && pword != null && !uname.isEmpty() && !pword.isEmpty() && first != null && !first.isEmpty() && last != null && !last.isEmpty()) {
-            int id = userDao.addUser(uname, pword, first, last);
+        if (uname != null && pword != null && !uname.isEmpty() && !pword.isEmpty() &&
+                first != null && !first.isEmpty() && last != null && !last.isEmpty() &&
+                email != null && !email.isEmpty() && address1 != null && !address1.isEmpty()) {
+
+            int id = userDao.addUser(uname, pword, first, last, email, address1, address2, eircode, phoneNumber, registrationDate);
             if (id == -1) {
                 forwardToJsp = "error.jsp";
                 String error = "This user could not be added. Please <a href=\"register.jsp\">try again.</a>";
@@ -103,7 +113,7 @@ public class Controller extends HttpServlet {
             } else {
                 forwardToJsp = "loginSuccessful.jsp";
                 session.setAttribute("username", uname);
-                User u = new User(id, first, last, uname, pword);
+                User u = new User(first, last, uname, pword, email, address1, address2, eircode, phoneNumber, registrationDate);
                 session.setAttribute("user", u);
                 String msg = "You are now Logged In :D";
                 session.setAttribute("msg", msg);
@@ -115,7 +125,6 @@ public class Controller extends HttpServlet {
         }
         return forwardToJsp;
     }
-
     private String changePasswordCommand(HttpServletRequest request, HttpServletResponse response) {
         String forwardToJsp = "index.jsp";
         HttpSession session = request.getSession(true);
