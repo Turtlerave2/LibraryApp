@@ -144,7 +144,7 @@ public class Controller extends HttpServlet {
             int id = userDao.addUser(uname, pword, first, last, email, address1, address2, eircode, phoneNumber, registrationDate);
 
             if (id == -1) {
-                forwardToJsp = " ";
+                forwardToJsp = "error.jsp";
                 String error = "This user could not be added. Please <a href=\"register.jsp\">try again.</a>";
                 session.setAttribute("errorMessage", error);
             } else {
@@ -160,6 +160,7 @@ public class Controller extends HttpServlet {
             String error = "Some information was not supplied. Please <a href=\"register.jsp\">try again.</a>";
             session.setAttribute("errorMessage", error);
         }
+
         return forwardToJsp;
     }
 
