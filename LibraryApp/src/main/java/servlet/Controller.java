@@ -41,7 +41,6 @@ public class Controller extends HttpServlet {
                     forwardToJsp="home.jsp";
                     break;
                 case "login":
-                    forwardToJsp="login.jsp";
                     forwardToJsp = loginCommand(request, response);
                     break;
                 case "register":
@@ -78,8 +77,8 @@ public class Controller extends HttpServlet {
                     break;
 
                 default:
-                    action="register";
-                    forwardToJsp = "register.jsp";
+                    action="landing";
+                    forwardToJsp = "home.jsp";
                     String error = "No such action defined for this application. Please try again.";
                     session.setAttribute("errorMessage", error);
             }
