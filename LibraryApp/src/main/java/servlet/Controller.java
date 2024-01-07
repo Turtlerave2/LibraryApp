@@ -19,7 +19,7 @@ import java.util.List;
 public class Controller extends HttpServlet {
 
     private final UserDao userDao;
-    private final BookDao bookDao;
+    private  final BookDao bookDao;
 
     public Controller() {
         super();
@@ -31,20 +31,27 @@ public class Controller extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        String forwardToJsp = "register.jsp";
+        String forwardToJsp = "index.jsp";
         String action = request.getParameter("action");
-        action = "register";
+
 
         if (action != null) {
             switch (action) {
-                case "landing":
-                    forwardToJsp = "home.jsp";
+                case"landing":
+                    forwardToJsp="home.jsp";
                     break;
                 case "login":
+                    forwardToJsp="login.jsp";
                     forwardToJsp = loginCommand(request, response);
                     break;
                 case "register":
                     forwardToJsp = registerCommand(request, response);
+                    break;
+                case "Showlogin":
+                    forwardToJsp="login.jsp";
+                    break;
+                case "Showregister":
+                    forwardToJsp="register.jsp";
                     break;
                 case "displayallbooks":
                     forwardToJsp = displaybooksCommand(request, response);
@@ -71,7 +78,7 @@ public class Controller extends HttpServlet {
                     break;
 
                 default:
-                    action = "register";
+                    action="register";
                     forwardToJsp = "register.jsp";
                     String error = "No such action defined for this application. Please try again.";
                     session.setAttribute("errorMessage", error);
@@ -109,17 +116,6 @@ public class Controller extends HttpServlet {
         return forwardToJsp;
     }
 
-    private boolean isValidEmail(String email) {
-
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        return email.matches(emailRegex);
-    }
-
-    private boolean isStrongPassword(String password) {
-        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$";
-        return password.matches(passwordRegex);
-    }
-
     private String registerCommand(HttpServletRequest request, HttpServletResponse response) {
         String forwardToJsp = "index.jsp";
         HttpSession session = request.getSession(true);
@@ -138,30 +134,18 @@ public class Controller extends HttpServlet {
                 first != null && !first.isEmpty() && last != null && !last.isEmpty() &&
                 email != null && !email.isEmpty() && address1 != null && !address1.isEmpty()) {
 
-            if (!isValidEmail(email)) {
-                // Handle invalid email format
+            int id = userDao.addUser(uname, pword, first, last, email, address1, address2, eircode, phoneNumber, registrationDate);
+            if (id == -1) {
                 forwardToJsp = "error.jsp";
-                String error = "Invalid email format. Please provide a valid email address.";
-                session.setAttribute("errorMessage", error);
-            } else if (!isStrongPassword(pword)) {
-                // Handle weak password
-                forwardToJsp = "error.jsp";
-                String error = "Weak password. Passwords must contain at least 8 characters, including one uppercase letter, one lowercase letter, and one digit.";
+                String error = "This user could not be added. Please <a href=\"register.jsp\">try again.</a>";
                 session.setAttribute("errorMessage", error);
             } else {
-                int id = userDao.addUser(uname, pword, first, last, email, address1, address2, eircode, phoneNumber, registrationDate);
-                if (id == -1) {
-                    forwardToJsp = "error.jsp";
-                    String error = "This user could not be added. Please <a href=\"register.jsp\">try again.</a>";
-                    session.setAttribute("errorMessage", error);
-                } else {
-                    forwardToJsp = "loginSuccessful.jsp";
-                    session.setAttribute("username", uname);
-                    User u = new User(first, last, uname, pword, email, address1, address2, eircode, phoneNumber, registrationDate);
-                    session.setAttribute("user", u);
-                    String msg = "You are now Logged In :D";
-                    session.setAttribute("msg", msg);
-                }
+                forwardToJsp = "loginSuccessful.jsp";
+                session.setAttribute("username", uname);
+                User u = new User(first, last, uname, pword, email, address1, address2, eircode, phoneNumber, registrationDate);
+                session.setAttribute("user", u);
+                String msg = "You are now Logged In :D";
+                session.setAttribute("msg", msg);
             }
         } else {
             forwardToJsp = "error.jsp";
@@ -170,7 +154,6 @@ public class Controller extends HttpServlet {
         }
         return forwardToJsp;
     }
-
     private String changePasswordCommand(HttpServletRequest request, HttpServletResponse response) {
         String forwardToJsp = "index.jsp";
         HttpSession session = request.getSession(true);
@@ -184,22 +167,15 @@ public class Controller extends HttpServlet {
             if (oldPass != null && newPassOne != null && newPassTwo != null &&
                     !oldPass.isBlank() && !newPassOne.isBlank() && !newPassTwo.isBlank()) {
                 if (newPassOne.equals(newPassTwo)) {
-                    if (!isStrongPassword(newPassOne)) {
-                        // Handle weak new password
-                        forwardToJsp = "error.jsp";
-                        String error = "Weak password. Passwords must contain at least 8 characters, including one uppercase letter, one lowercase letter, and one digit.";
-                        session.setAttribute("errorMessage", error);
+                    int result = userDao.changePassword(u.getUsername(), oldPass, newPassOne);
+                    if (result == 1) {
+                        forwardToJsp = "login.jsp";
+                        String msg = "Password has changed.";
+                        session.setAttribute("msg", msg);
                     } else {
-                        int result = userDao.changePassword(u.getUsername(), oldPass, newPassOne);
-                        if (result == 1) {
-                            forwardToJsp = "login.jsp";
-                            String msg = "Password has changed.";
-                            session.setAttribute("msg", msg);
-                        } else {
-                            forwardToJsp = "error.jsp";
-                            String error = "Previous Password Incorrect. Please <a href=\"changePassword.jsp\">go back</a> and try again.";
-                            session.setAttribute("errorMessage", error);
-                        }
+                        forwardToJsp = "error.jsp";
+                        String error = "Previous Password Incorrect. Please <a href=\"changePassword.jsp\">go back</a> and try again.";
+                        session.setAttribute("errorMessage", error);
                     }
                 } else {
                     forwardToJsp = "error.jsp";
@@ -218,7 +194,6 @@ public class Controller extends HttpServlet {
         }
         return forwardToJsp;
     }
-
     private String displaybooksCommand(HttpServletRequest request, HttpServletResponse response) {
         String forwardToJsp = "index.jsp";
         HttpSession session = request.getSession(true);
@@ -227,27 +202,26 @@ public class Controller extends HttpServlet {
             session.setAttribute("bookList", bookdisplay);
 
             forwardToJsp = "displaybooks.jsp";
-        } catch (DaoException e) {
+        } catch(DaoException e) {
             e.printStackTrace();
             forwardToJsp = "error.jsp";
             String error = "Yo my bad Failed to recieve book list";
-            session.setAttribute("errorMessage", error);
+            session.setAttribute("errorMessage",error);
         }
         return forwardToJsp;
 
     }
-
     private String searchbookbytitleCommand(HttpServletRequest request, HttpServletResponse response) {
         String forwardToJsp = "index.jsp";
         HttpSession session = request.getSession(true);
         String title = request.getParameter("Title");
         try {
 
-            List<Book> returnbooktitle = bookDao.searchBookTitle(title);
+            List<Book> returnbooktitle= bookDao.searchBookTitle(title);
             session.setAttribute("foundbook", returnbooktitle);
             forwardToJsp = "displaysearchtitle.jsp";
 
-        } catch (DaoException e) {
+        } catch(DaoException e) {
             e.getMessage();
             forwardToJsp = "error.jsp";
             String error = "Yo my mans the thing your searching does not exist ";
@@ -256,7 +230,6 @@ public class Controller extends HttpServlet {
         return forwardToJsp;
 
     }
-
     private String borrowingbooksCommand(HttpServletRequest request, HttpServletResponse response) {
         String forwardToJsp = "index.jsp";
 
@@ -267,7 +240,7 @@ public class Controller extends HttpServlet {
             bookDao.borrowBook(bookids);
             forwardToJsp = "borrowingbooks.jsp";
 
-        } catch (DaoException e) {
+        } catch(DaoException e) {
             e.getMessage();
             forwardToJsp = "error.php";
             String error = "yo g you cant borrow that";
@@ -286,13 +259,13 @@ public class Controller extends HttpServlet {
             int bookids = Integer.parseInt(bookid);
             bookDao.returnBook(bookids);
             forwardToJsp = "displaybooks.jsp";
-        } catch (DaoException e) {
+        } catch(DaoException e) {
             e.getMessage();
             forwardToJsp = "error.php";
             String error = "yooo what your returning is not returning";
             session.setAttribute("errorMessage", error);
         }
-        return forwardToJsp;
+        return  forwardToJsp;
     }
 
     private String viewProfileCommand(HttpServletRequest request, HttpServletResponse response)
@@ -311,7 +284,6 @@ public class Controller extends HttpServlet {
         }
         return "profile.jsp";
     }
-
     private String updateUserProfileCommand(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(true);
         User loggedInUser = (User) session.getAttribute("user");

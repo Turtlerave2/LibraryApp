@@ -9,6 +9,6 @@
 <h1><%= "Hello World!" %>
 </h1>
 <br/>
-<a href="controller">Hello Servlet</a>
+<a href="controller?action=landing">Hello Servlet</a>
 </body>
 </html>

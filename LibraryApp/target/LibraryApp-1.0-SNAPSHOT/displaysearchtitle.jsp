@@ -12,7 +12,7 @@
 <body>
 <div class="container">
     <h1>Search Book by Title</h1>
-    <form action="searchbooks" method="post">
+    <form action="searchbooks" method="get">
         <div class="form-group">
             <label for="titleInput">Enter Title:</label>
             <input type="text" class="form-control" id="titleInput" name="Title" placeholder="Enter book title">
