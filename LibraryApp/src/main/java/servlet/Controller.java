@@ -1,5 +1,7 @@
 package servlet;
 
+import Exceptions.DaoException;
+import business.Book;
 import business.User;
 import daos.*;
 import jakarta.servlet.ServletException;
@@ -16,11 +18,13 @@ import java.util.List;
 public class Controller extends HttpServlet {
 
     private final UserDao userDao;
+    private  final BookDao bookDao;
 
     public Controller() {
         super();
         // Instantiate UserDao for database operations
         userDao = new UserDao("libraryapp");
+        bookDao = new BookDao("libraryapp");
     }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -40,6 +44,10 @@ public class Controller extends HttpServlet {
                 case "changePassword":
                     forwardToJsp = changePasswordCommand(request, response);
                     break;
+                case "displayallbooks":
+                    forwardToJsp = displaybooksCommand(request, response);
+                    break;
+
                 default:
                     forwardToJsp = "error.jsp";
                     String error = "No such action defined for this application. Please try again.";
@@ -147,6 +155,19 @@ public class Controller extends HttpServlet {
             session.setAttribute("errorMessage", error);
         }
         return forwardToJsp;
+    }
+    private String displaybooksCommand(HttpServletRequest request, HttpServletResponse response) {
+        String forwardToJsp = "index.jsp";
+        HttpSession session = request.getSession(true);
+        try {
+            List<Book> bookdisplay = bookDao.findAllBooks();
+
+        } catch(DaoException e) {
+            e.getMessage();
+        }
+        forwardToJsp = "displaybooks.jsp";
+        return forwardToJsp;
+
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
