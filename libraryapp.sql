@@ -125,19 +125,20 @@ INSERT INTO `loans` (`LoanID`, `MemberID`, `BookID`, `LoanDate`, `DueDate`, `Ret
 --
 
 CREATE TABLE `members` (
-  `MemberID` int(11) NOT NULL,
-  `Username` varchar(255) NOT NULL,
-  `Password` varchar(255) NOT NULL,
-  `First_Name` varchar(255) DEFAULT NULL,
-  `Last_Name` varchar(255) DEFAULT NULL,
-  `Email` varchar(255) DEFAULT NULL,
-  `Address1` varchar(255) DEFAULT NULL,
-  `Address2` varchar(255) DEFAULT NULL,
-  `Eircode` varchar(10) DEFAULT NULL,
-  `Phone_Number` varchar(20) DEFAULT NULL,
-  `Registration_Date` date DEFAULT NULL,
-  `Admin` bit(1) NOT NULL DEFAULT b'0'
+`MemberID` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+`Username` varchar(255) NOT NULL,
+`Password` varchar(255) NOT NULL,
+`First_Name` varchar(255) DEFAULT NULL,
+`Last_Name` varchar(255) DEFAULT NULL,
+`Email` varchar(255) DEFAULT NULL,
+`Address1` varchar(255) DEFAULT NULL,
+`Address2` varchar(255) DEFAULT NULL,
+`Eircode` varchar(10) DEFAULT NULL,
+`Phone_Number` varchar(20) DEFAULT NULL,
+`Registration_Date` date DEFAULT NULL,
+`Admin` bit(1) NOT NULL DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 --
 -- Dumping data for table `members`
