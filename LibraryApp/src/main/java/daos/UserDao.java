@@ -2,10 +2,7 @@ package daos;
 
 import business.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -179,21 +176,22 @@ public class UserDao extends Dao implements UserDaoInterface{
      * @param lName The last name of the new user
      * @return The ID of the newly added user, or -1 if the addition fails
      */
+    @Override
     public int addUser(String uname, String pword, String fName, String lName, String email, String address1, String address2, String eircode, String phoneNumber, String registrationDate) {
         Connection con = null;
         PreparedStatement ps = null;
-        int newId = -1;
         ResultSet generatedKeys = null;
+        int newId = -1;
 
         try {
             con = this.getConnection();
-            String query = "INSERT INTO members(Username, Password, First_Name, Last_Name, Email, Address1, Address2, Eircode, Phone_Number, Registration_Date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+            String query = "INSERT INTO user(first_name, last_name, username, password, email, address1, address2, eircode, phone_number, registration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-            ps.setString(1, uname);
-            ps.setString(2, pword);
-            ps.setString(3, fName);
-            ps.setString(4, lName);
+            ps.setString(1, fName);
+            ps.setString(2, lName);
+            ps.setString(3, uname);
+            ps.setString(4, pword);
             ps.setString(5, email);
             ps.setString(6, address1);
             ps.setString(7, address2);
@@ -204,11 +202,14 @@ public class UserDao extends Dao implements UserDaoInterface{
             ps.executeUpdate();
 
             generatedKeys = ps.getGeneratedKeys();
+
             if (generatedKeys.next()) {
                 newId = generatedKeys.getInt(1);
             }
         } catch (SQLException e) {
-            System.err.println("An error occurred during the addUser method: " + e.getMessage());
+            System.err.println("\tA problem occurred during the addUser method:");
+            System.err.println("\t" + e.getMessage());
+            newId = -1;
         } finally {
             try {
                 if (generatedKeys != null) {

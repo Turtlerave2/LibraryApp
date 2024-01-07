@@ -141,38 +141,29 @@ public class Controller extends HttpServlet {
                 first != null && !first.isEmpty() && last != null && !last.isEmpty() &&
                 email != null && !email.isEmpty() && address1 != null && !address1.isEmpty()) {
 
-            if (!isValidEmail(email)) {
-                // Handle invalid email format
-                forwardToJsp = "error.jsp";
-                String error = "Invalid email format. Please provide a valid email address.";
-                session.setAttribute("errorMessage", error);
-            } else if (!isStrongPassword(pword)) {
-                // Handle weak password
-                forwardToJsp = "error.jsp";
-                String error = "Weak password. Passwords must contain at least 8 characters, including one uppercase letter, one lowercase letter, and one digit.";
+            UserDao userDao = new UserDao("user_database");
+            int id = userDao.addUser(uname, pword, first, last, email, address1, address2, eircode, phoneNumber, registrationDate);
+
+            if (id == -1) {
+                forwardToJsp = " ";
+                String error = "This user could not be added. Please <a href=\"register.jsp\">try again.</a>";
                 session.setAttribute("errorMessage", error);
             } else {
-                int id = userDao.addUser(uname, pword, first, last, email, address1, address2, eircode, phoneNumber, registrationDate);
-                if (id == -1) {
-                    forwardToJsp = "error.jsp";
-                    String error = "This user could not be added. Please <a href=\"register.jsp\">try again.</a>";
-                    session.setAttribute("errorMessage", error);
-                } else {
-                    forwardToJsp = "home.jsp";
-                    session.setAttribute("username", uname);
-                    User u = new User(first, last, uname, pword, email, address1, address2, eircode, phoneNumber, registrationDate);
-                    session.setAttribute("user", u);
-                    String msg = "You are now Logged In :D";
-                    session.setAttribute("msg", msg);
-                }
+                forwardToJsp = "loginSuccessful.jsp";
+                session.setAttribute("username", uname);
+                User u = new User(first, last, uname, pword, email, address1, address2, eircode, phoneNumber, registrationDate);
+                session.setAttribute("user", u);
+                String msg = "Registration successful, you are now logged in!";
+                session.setAttribute("msg", msg);
             }
         } else {
             forwardToJsp = "error.jsp";
-            String error = "Please <a href=\"register.jsp\">try again.</a>. Please Enter info carefully.";
+            String error = "Some information was not supplied. Please <a href=\"register.jsp\">try again.</a>";
             session.setAttribute("errorMessage", error);
         }
         return forwardToJsp;
     }
+
 
     private String changePasswordCommand(HttpServletRequest request, HttpServletResponse response) {
         String forwardToJsp = "index.jsp";

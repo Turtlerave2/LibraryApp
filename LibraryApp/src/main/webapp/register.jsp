@@ -3,38 +3,44 @@
   User: rob
 --%>
 <!-- register.jsp -->
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Register</title>
+    <title>Registration Page</title>
 </head>
 <body>
-<h1>Registration Page</h1>
+<h1>Registration Form</h1>
 <form action="controller" method="post">
-    <input type="hidden" name="action" value="register">
     <label for="username">Username:</label>
-    <input type="text" id="username" name="username"><br>
+    <input type="text" id="username" name="username" required><br>
+
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password"><br>
-    <label for="confirmPassword">Confirm Password:</label>
-    <input type="password" id="confirmPassword" name="confirmPassword"><br>
+    <input type="password" id="password" name="password" required><br>
+
     <label for="fName">First Name:</label>
-    <input type="text" id="fName" name="fName"><br>
+    <input type="text" id="fName" name="fName" required><br>
+
     <label for="lName">Last Name:</label>
-    <input type="text" id="lName" name="lName"><br>
+    <input type="text" id="lName" name="lName" required><br>
+
     <label for="email">Email:</label>
-    <input type="text" id="email" name="email"><br>
+    <input type="email" id="email" name="email" required><br>
+
     <label for="address1">Address Line 1:</label>
     <input type="text" id="address1" name="address1"><br>
+
     <label for="address2">Address Line 2:</label>
     <input type="text" id="address2" name="address2"><br>
+
     <label for="eircode">Eircode:</label>
     <input type="text" id="eircode" name="eircode"><br>
+
     <label for="phoneNumber">Phone Number:</label>
     <input type="text" id="phoneNumber" name="phoneNumber"><br>
+
     <input type="submit" value="Register">
+    <input type="hidden" name="action" value="register">
 </form>
-<p>Already have an account? <a href="login.jsp">Login here</a>.</p>
 </body>
 </html>
