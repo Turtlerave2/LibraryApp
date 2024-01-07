@@ -141,7 +141,6 @@ public class Controller extends HttpServlet {
                 first != null && !first.isEmpty() && last != null && !last.isEmpty() &&
                 email != null && !email.isEmpty() && address1 != null && !address1.isEmpty()) {
 
-            UserDao userDao = new UserDao("user_database");
             int id = userDao.addUser(uname, pword, first, last, email, address1, address2, eircode, phoneNumber, registrationDate);
 
             if (id == -1) {
@@ -149,7 +148,7 @@ public class Controller extends HttpServlet {
                 String error = "This user could not be added. Please <a href=\"register.jsp\">try again.</a>";
                 session.setAttribute("errorMessage", error);
             } else {
-                forwardToJsp = "loginSuccessful.jsp";
+                forwardToJsp = "home.jsp";
                 session.setAttribute("username", uname);
                 User u = new User(first, last, uname, pword, email, address1, address2, eircode, phoneNumber, registrationDate);
                 session.setAttribute("user", u);
