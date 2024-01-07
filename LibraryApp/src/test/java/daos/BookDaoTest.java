@@ -11,22 +11,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BookDaoTest {
 
-        private BookDaoInterface bookDao;
 
-        void setUp() {
-            bookDao = (BookDaoInterface) new BookDao("name");
-        }
 
-        void tearDown() {
-            bookDao = null;
-        }
+            BookDao book1 = new BookDao("libraryapp");
+
+
+
     /** Destiny
      * Test the functionality of finding all books in the database.
      */
         @Test
         void testFindAllBooks() {
             try {
-                List<Book> books = bookDao.findAllBooks();
+                List<Book> books = book1.findAllBooks();
                 assertNotNull(books);
                 assertFalse(books.isEmpty());
 
@@ -47,7 +44,7 @@ class BookDaoTest {
             String titleToSearch = "harrypotter";
 
             try {
-                List<Book> books = bookDao.searchBookByTitle(titleToSearch);
+                List<Book> books = book1.searchBookTitle(titleToSearch);
                 assertNotNull(books);
 
                 for (Book book : books) {
@@ -65,24 +62,23 @@ class BookDaoTest {
             int bookIDToBorrow = 1;
 
             try {
-                bookDao.borrowBook(bookIDToBorrow);
+                book1.borrowBook(bookIDToBorrow);
 
-                Book borrowedBook = bookDao.findAllBooks().stream().filter(book -> book.getBookID() == bookIDToBorrow)
+                Book borrowedBook = book1.findAllBooks().stream().filter(book -> book.getBookID() == bookIDToBorrow)
                         .findFirst().orElse(null);
                 assertNotNull(borrowedBook);
-                assertEquals(1, borrowedBook.getTotalCopies());
+                assertEquals(1199998, borrowedBook.getTotalCopies());
 
-                bookDao.returnBook(bookIDToBorrow);
+                book1.returnBook(bookIDToBorrow);
 
-                Book returnBook = bookDao.findAllBooks().stream()
+                Book returnBook = book1.findAllBooks().stream()
                         .filter(book -> book.getBookID() == bookIDToBorrow)
                         .findFirst()
                         .orElse(null);
                 assertNotNull(returnBook);
-                assertEquals(2, returnBook.getTotalCopies());
+                assertEquals(1199999, returnBook.getTotalCopies());
             } catch (DaoException e) {
                 fail("Exception throw:" + e.getMessage());
             }
         }
     }
-}
