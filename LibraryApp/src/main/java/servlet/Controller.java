@@ -31,9 +31,9 @@ public class Controller extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        String forwardToJsp = "register.jsp";
+        String forwardToJsp = "index.jsp";
         String action = request.getParameter("action");
-        action="register";
+
 
         if (action != null) {
             switch (action) {
@@ -41,10 +41,17 @@ public class Controller extends HttpServlet {
                     forwardToJsp="home.jsp";
                     break;
                 case "login":
+                    forwardToJsp="login.jsp";
                     forwardToJsp = loginCommand(request, response);
                     break;
                 case "register":
                     forwardToJsp = registerCommand(request, response);
+                    break;
+                case "Showlogin":
+                    forwardToJsp="login.jsp";
+                    break;
+                case "Showregister":
+                    forwardToJsp="register.jsp";
                     break;
                 case "displayallbooks":
                     forwardToJsp = displaybooksCommand(request, response);
