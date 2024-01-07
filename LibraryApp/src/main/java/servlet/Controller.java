@@ -301,8 +301,9 @@ public class Controller extends HttpServlet {
         User loggedInUser = (User) session.getAttribute("user");
 
         if (loggedInUser != null) {
-            // Fetch the user details from the database to ensure the most up-to-date information
             loggedInUser = userDao.findUserById(loggedInUser.getId());
+
+            session.setAttribute("user", loggedInUser);
 
             request.setAttribute("loggedInUser", loggedInUser);
             request.getRequestDispatcher("viewProfile.jsp").forward(request, response);
