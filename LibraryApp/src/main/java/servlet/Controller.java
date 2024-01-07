@@ -31,8 +31,9 @@ public class Controller extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        String forwardToJsp = "index.html";
+        String forwardToJsp = "register.jsp";
         String action = request.getParameter("action");
+        action="register";
 
         if (action != null) {
             switch (action) {
@@ -59,7 +60,8 @@ public class Controller extends HttpServlet {
                     break;
 
                 default:
-                    forwardToJsp = "error.jsp";
+                    action="register";
+                    forwardToJsp = "register.jsp";
                     String error = "No such action defined for this application. Please try again.";
                     session.setAttribute("errorMessage", error);
             }
