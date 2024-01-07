@@ -185,19 +185,20 @@ public class UserDao extends Dao implements UserDaoInterface{
 
         try {
             con = this.getConnection();
-            String query = "INSERT INTO members(newId,first_name, last_name, username, password, email, address1, address2, eircode, phone_number, registration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO members(newId,first_name, last_name, username, password, email, address1, address2, eircode, phone_number, registration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
             ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-            ps.setString(1, fName);
-            ps.setString(2, lName);
-            ps.setString(3, uname);
-            ps.setString(4, pword);
-            ps.setString(5, email);
-            ps.setString(6, address1);
-            ps.setString(7, address2);
-            ps.setString(8, eircode);
-            ps.setString(9, phoneNumber);
-            ps.setString(10, registrationDate);
+            ps.setInt(1,newId);
+            ps.setString(2, fName);
+            ps.setString(3, lName);
+            ps.setString(4, uname);
+            ps.setString(5, pword);
+            ps.setString(6, email);
+            ps.setString(7, address1);
+            ps.setString(8, address2);
+            ps.setString(9, eircode);
+            ps.setString(10, phoneNumber);
+            ps.setString(11, registrationDate);
 
             ps.executeUpdate();
 
