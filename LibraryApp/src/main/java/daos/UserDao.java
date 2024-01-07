@@ -185,7 +185,7 @@ public class UserDao extends Dao implements UserDaoInterface{
 
         try {
             con = this.getConnection();
-            String query = "INSERT INTO members(newId,first_name, last_name, username, password, email, address1, address2, eircode, phone_number, registration_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+            String query = "INSERT INTO members(MemberID,Username, Password, First_Name, Last_Name, Email, Address1, Address2, Eircode, Phone_Number, Registration_Date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
             ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             ps.setInt(1,newId);
@@ -205,7 +205,7 @@ public class UserDao extends Dao implements UserDaoInterface{
             generatedKeys = ps.getGeneratedKeys();
 
             if (generatedKeys.next()) {
-                newId = generatedKeys.getInt(1);
+                newId = generatedKeys.getInt(1); // causing an issue, unknown
             }
         } catch (SQLException e) {
             System.err.println("\tA problem occurred during the addUser method:");
