@@ -47,6 +47,9 @@ public class Controller extends HttpServlet {
                 case "displayallbooks":
                     forwardToJsp = displaybooksCommand(request, response);
                     break;
+                case "searchbooks":
+                    forwardToJsp = searchbookbytitleCommand(request, response);
+                    break;
 
                 default:
                     forwardToJsp = "error.jsp";
@@ -161,11 +164,34 @@ public class Controller extends HttpServlet {
         HttpSession session = request.getSession(true);
         try {
             List<Book> bookdisplay = bookDao.findAllBooks();
+            session.setAttribute("bookList", bookdisplay);
+
+            forwardToJsp = "displaybooks.jsp";
+        } catch(DaoException e) {
+            e.printStackTrace();
+            forwardToJsp = "error.jsp";
+            String error = "Yo my bad Failed to recieve book list";
+            session.setAttribute("errorMessage",error);
+        }
+        return forwardToJsp;
+
+    }
+    private String searchbookbytitleCommand(HttpServletRequest request, HttpServletResponse response) {
+        String forwardToJsp = "index.jsp";
+        HttpSession session = request.getSession(true);
+        String title = request.getParameter("Title");
+        try {
+
+            List<Book> returnbooktitle= bookDao.searchBookTitle(title);
+            session.setAttribute("foundbook", returnbooktitle);
+            forwardToJsp = "displaysearchtitle.jsp";
 
         } catch(DaoException e) {
             e.getMessage();
+            forwardToJsp = "error.jsp";
+            String error = "Yo my mans the thing your searching does not exist ";
+            session.setAttribute("errorMessage", error);
         }
-        forwardToJsp = "displaybooks.jsp";
         return forwardToJsp;
 
     }
