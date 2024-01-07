@@ -37,6 +37,9 @@ public class Controller extends HttpServlet {
 
         if (action != null) {
             switch (action) {
+                case"landing":
+
+                    break;
                 case "login":
                     forwardToJsp = loginCommand(request, response);
                     break;
@@ -57,6 +60,9 @@ public class Controller extends HttpServlet {
                     break;
                 case "returnbooks":
                     forwardToJsp = returningbooksCommand(request, response);
+                    break;
+                case "viewProfile":
+                    forwardToJsp = viewProfileCommand(request, response);
                     break;
 
                 default:
@@ -248,6 +254,23 @@ public class Controller extends HttpServlet {
             session.setAttribute("errorMessage", error);
         }
         return  forwardToJsp;
+    }
+
+    private String viewProfileCommand(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
+        User loggedInUser = (User) session.getAttribute("user");
+
+        if (loggedInUser != null) {
+            // Fetch the user details from the database to ensure the most up-to-date information
+            loggedInUser = userDao.findUserById(loggedInUser.getId());
+
+            request.setAttribute("loggedInUser", loggedInUser);
+            request.getRequestDispatcher("viewProfile.jsp").forward(request, response);
+        } else {
+            response.sendRedirect("login.jsp");
+        }
+        return "profile.jsp";
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
