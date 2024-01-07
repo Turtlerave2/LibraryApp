@@ -122,7 +122,8 @@ class UserDaoInterfaceTest {
          */
         @Test
         public void testAddUserPOP() {
-            int newId = userDao.addUser("TestUser", "testpass", "Test", "User");
+            int newId = userDao.addUser("TestUser", "testpass", "Test", "User", "test@example.com", "Address 1", "Address 2", "Eircode", "1234567890", "2024-01-06");
+
             assertTrue(newId > 0);
         }
         /**
