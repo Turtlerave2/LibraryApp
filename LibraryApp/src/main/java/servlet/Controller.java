@@ -115,6 +115,14 @@ public class Controller extends HttpServlet {
         }
         return forwardToJsp;
     }
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        return email.matches(emailRegex);
+    }
+    private boolean isStrongPassword(String password) {
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$";
+        return password.matches(passwordRegex);
+    }
 
     private String registerCommand(HttpServletRequest request, HttpServletResponse response) {
         String forwardToJsp = "index.jsp";
@@ -134,18 +142,30 @@ public class Controller extends HttpServlet {
                 first != null && !first.isEmpty() && last != null && !last.isEmpty() &&
                 email != null && !email.isEmpty() && address1 != null && !address1.isEmpty()) {
 
-            int id = userDao.addUser(uname, pword, first, last, email, address1, address2, eircode, phoneNumber, registrationDate);
-            if (id == -1) {
+            if (!isValidEmail(email)) {
+                // Handle invalid email format
                 forwardToJsp = "error.jsp";
-                String error = "This user could not be added. Please <a href=\"register.jsp\">try again.</a>";
+                String error = "Invalid email format. Please provide a valid email address.";
+                session.setAttribute("errorMessage", error);
+            } else if (!isStrongPassword(pword)) {
+                // Handle weak password
+                forwardToJsp = "error.jsp";
+                String error = "Weak password. Passwords must contain at least 8 characters, including one uppercase letter, one lowercase letter, and one digit.";
                 session.setAttribute("errorMessage", error);
             } else {
-                forwardToJsp = "loginSuccessful.jsp";
-                session.setAttribute("username", uname);
-                User u = new User(first, last, uname, pword, email, address1, address2, eircode, phoneNumber, registrationDate);
-                session.setAttribute("user", u);
-                String msg = "You are now Logged In :D";
-                session.setAttribute("msg", msg);
+                int id = userDao.addUser(uname, pword, first, last, email, address1, address2, eircode, phoneNumber, registrationDate);
+                if (id == -1) {
+                    forwardToJsp = "error.jsp";
+                    String error = "This user could not be added. Please <a href=\"register.jsp\">try again.</a>";
+                    session.setAttribute("errorMessage", error);
+                } else {
+                    forwardToJsp = "loginSuccessful.jsp";
+                    session.setAttribute("username", uname);
+                    User u = new User(first, last, uname, pword, email, address1, address2, eircode, phoneNumber, registrationDate);
+                    session.setAttribute("user", u);
+                    String msg = "You are now Logged In :D";
+                    session.setAttribute("msg", msg);
+                }
             }
         } else {
             forwardToJsp = "error.jsp";
@@ -154,6 +174,7 @@ public class Controller extends HttpServlet {
         }
         return forwardToJsp;
     }
+
     private String changePasswordCommand(HttpServletRequest request, HttpServletResponse response) {
         String forwardToJsp = "index.jsp";
         HttpSession session = request.getSession(true);
@@ -167,15 +188,22 @@ public class Controller extends HttpServlet {
             if (oldPass != null && newPassOne != null && newPassTwo != null &&
                     !oldPass.isBlank() && !newPassOne.isBlank() && !newPassTwo.isBlank()) {
                 if (newPassOne.equals(newPassTwo)) {
-                    int result = userDao.changePassword(u.getUsername(), oldPass, newPassOne);
-                    if (result == 1) {
-                        forwardToJsp = "login.jsp";
-                        String msg = "Password has changed.";
-                        session.setAttribute("msg", msg);
-                    } else {
+                    if (!isStrongPassword(newPassOne)) {
+                        // Handle weak new password
                         forwardToJsp = "error.jsp";
-                        String error = "Previous Password Incorrect. Please <a href=\"changePassword.jsp\">go back</a> and try again.";
+                        String error = "Weak password. Passwords must contain at least 8 characters, including one uppercase letter, one lowercase letter, and one digit.";
                         session.setAttribute("errorMessage", error);
+                    } else {
+                        int result = userDao.changePassword(u.getUsername(), oldPass, newPassOne);
+                        if (result == 1) {
+                            forwardToJsp = "login.jsp";
+                            String msg = "Password has changed.";
+                            session.setAttribute("msg", msg);
+                        } else {
+                            forwardToJsp = "error.jsp";
+                            String error = "Previous Password Incorrect. Please <a href=\"changePassword.jsp\">go back</a> and try again.";
+                            session.setAttribute("errorMessage", error);
+                        }
                     }
                 } else {
                     forwardToJsp = "error.jsp";
