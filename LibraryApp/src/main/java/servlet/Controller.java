@@ -215,11 +215,13 @@ public class Controller extends HttpServlet {
         try {
             int bookids = Integer.parseInt(bookid);
             bookDao.borrowBook(bookids);
-            forwardToJsp = "displaysearchtitle.jsp";
+            forwardToJsp = "borrowingbooks.jsp";
 
         } catch(DaoException e) {
             e.getMessage();
             forwardToJsp = "error.php";
+            String error = "yo g you cant borrow that";
+            session.setAttribute("errorMessage", error);
 
         }
         return forwardToJsp;
