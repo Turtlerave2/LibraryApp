@@ -11,7 +11,7 @@
 </head>
 <body>
 <h1>Registration Form</h1>
-<form action="controller" method="post">
+<form action="register" method="post">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required><br>
 
