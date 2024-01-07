@@ -1,10 +1,11 @@
 <%@ page import="business.Book" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.sql.SQLOutput" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Display All Books</title>
+    <title>Search Results By Title</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -17,10 +18,10 @@
 </head>
 <body>
 <div class="container">
-    <h1 class="mt-4 mb-4">All Books</h1>
+    <h1 class="mt-4 mb-4">Books Found By Title</h1>
     <%
-        List<Book> bookList = (List<Book>) session.getAttribute("bookList");
-        if (bookList != null && !bookList.isEmpty()) {
+        List<Book> foundBooks = (List<Book>) session.getAttribute("foundbook");
+        if (foundBooks != null && !foundBooks.isEmpty()) {
     %>
     <table class="table table-bordered table-striped book-table">
         <thead class="thead-dark">
@@ -32,11 +33,10 @@
             <th>Genre</th>
             <th>Total Copies</th>
             <th>Description</th>
-            <th>Action</th> <!-- Added header for the action -->
         </tr>
         </thead>
         <tbody>
-        <% for (Book book : bookList) { %>
+        <% for (Book book : foundBooks) { %>
         <tr>
             <td><%= book.getTitle() %></td>
             <td><%= book.getAuthorID() %></td>
@@ -45,20 +45,13 @@
             <td><%= book.getGenreID() %></td>
             <td><%= book.getTotalCopies() %></td>
             <td><%= book.getDescription() %></td>
-            <td>
-                <!-- Borrow button as part of a form -->
-                <form action="borrowbooks" method="post">
-                    <input type="hidden" name="bookId" value="<%= book.getBookID() %>">
-                    <button type="submit" class="btn btn-primary">Borrow</button>
-                </form>
-            </td>
         </tr>
         <% } %>
         </tbody>
     </table>
     <%
         } else {
-            System.out.println("no books found");
+            System.out.println("no book");
         }
     %>
 </div>
@@ -68,3 +61,4 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
