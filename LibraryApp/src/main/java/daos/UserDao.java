@@ -42,12 +42,18 @@ public class UserDao extends Dao implements UserDaoInterface{
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                int userId = rs.getInt("MemberID");
                 String username = rs.getString("Username");
                 String password = rs.getString("Password");
                 String lastName = rs.getString("Last_Name");
                 String firstName = rs.getString("First_Name");
-                User u = new User(userId, firstName, lastName, username, password);
+                String email = rs.getString("Email");
+                String address1 = rs.getString("Address1");
+                String address2 = rs.getString("Address2");
+                String eircode = rs.getString("Eircode");
+                String phoneNumber = rs.getString("Phone_Number");
+                String registrationDate = rs.getString("Registration_Date");
+
+                User u = new User(firstName, lastName, username, password, email, address1, address2, eircode, phoneNumber, registrationDate);
                 users.add(u);
             }
         } catch (SQLException e) {
@@ -61,9 +67,8 @@ public class UserDao extends Dao implements UserDaoInterface{
                 System.out.println("An error occurred when shutting down the findAllUsers() method: " + e.getMessage());
             }
         }
-        return users;     // may be empty
+        return users;
     }
-
     /**
      * Retrieves a user by username and password.
      *
@@ -91,7 +96,14 @@ public class UserDao extends Dao implements UserDaoInterface{
                 String password = rs.getString("Password");
                 String lastName = rs.getString("Last_Name");
                 String firstName = rs.getString("First_Name");
-                u = new User(userId, firstName, lastName, username, password);
+                String email = rs.getString("Email");
+                String address1 = rs.getString("Address1");
+                String address2 = rs.getString("Address2");
+                String eircode = rs.getString("Eircode");
+                String phoneNumber = rs.getString("Phone_Number");
+                String registrationDate = rs.getString("Registration_Date");
+
+                u = new User(firstName, lastName, username, password, email, address1, address2, eircode, phoneNumber, registrationDate);
             }
         } catch (SQLException e) {
             System.out.println("An error occurred in the findUserByUsernamePassword() method: " + e.getMessage());
@@ -115,7 +127,6 @@ public class UserDao extends Dao implements UserDaoInterface{
      * @return A User object representing the user if found, otherwise null
      */
     public User findUserById(int id) {
-        // Find a user by their ID
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -134,7 +145,15 @@ public class UserDao extends Dao implements UserDaoInterface{
                 String password = rs.getString("Password");
                 String lastName = rs.getString("Last_Name");
                 String firstName = rs.getString("First_Name");
-                u = new User(userId, firstName, lastName, username, password);
+                String email = rs.getString("Email");
+                String address1 = rs.getString("Address1");
+                String address2 = rs.getString("Address2");
+                String eircode = rs.getString("Eircode");
+                String phoneNumber = rs.getString("Phone_Number");
+                String registrationDate = rs.getString("Registration_Date");
+
+
+                u = new User(firstName, lastName, username, password, email, address1, address2, eircode, phoneNumber, registrationDate);
             }
         } catch (SQLException e) {
             System.out.println("An error occurred in the findUserById() method: " + e.getMessage());
@@ -149,6 +168,7 @@ public class UserDao extends Dao implements UserDaoInterface{
         }
         return u;
     }
+
 
     /**
      * Adds a new user to the 'members' table.
@@ -284,4 +304,42 @@ public class UserDao extends Dao implements UserDaoInterface{
         }
         return users;
     }
+
+    public int updateUserProfile(User updatedUser) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int rowsAffected = -1;
+
+        try {
+            con = this.getConnection();
+            String query = "UPDATE users SET First_Name = ?, Last_Name = ?, Email = ?, Address1 = ?, Address2 = ?, Eircode = ?, Phone_Number = ? WHERE Username = ?";
+            ps = con.prepareStatement(query);
+
+            ps.setString(1, updatedUser.getFirstName());
+            ps.setString(2, updatedUser.getLastName());
+            ps.setString(3, updatedUser.getEmail());
+            ps.setString(4, updatedUser.getAddress1());
+            ps.setString(5, updatedUser.getAddress2());
+            ps.setString(6, updatedUser.getEircode());
+            ps.setString(7, updatedUser.getPhoneNumber());
+            ps.setString(8, updatedUser.getUsername());
+
+            rowsAffected = ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("An error occurred in the updateUserProfile() method: " + e.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    freeConnection(con);
+                }
+            } catch (SQLException e) {
+                System.out.println("An error occurred when shutting down the updateUserProfile() method: " + e.getMessage());
+            }
+        }
+        return rowsAffected;
+    }
+
 }
